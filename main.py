@@ -6,6 +6,7 @@ viel ethen und ein paar radikale.
 sie reagieren zu polypropen
 
 radikale sind hier alles was offene ketten sind. ich weiss nicht ob die bennenung daher falsch ist, aber soweit ich weiss, macht es hier keinen unterschied ob es eine schon vorhandene kette ist oder ein einfaches einzelnes originales radikal
+ausserdeme bennene ich radikale manchmal auch als atome, was nicht immer (meistens nicht) stimmt, aber sie agieren wie atome, also ist es mir egal
 """
 
 
@@ -17,11 +18,11 @@ darstellungen:
 """
 
 
-ethen_start_anzahl = 1000000
+ethen_start_anzahl = 10
 ethen_anzahl = ethen_start_anzahl
-radikale_start_anzahl = 100
+radikale_start_anzahl = 6         #sollte gerade sein, damit am ende kein radikalübrig bleibt, das kein anderen radikal findet. dies sollte kein grösseres problem sein, aber es Könnte konsequenzen haben, wenn dadurche meherere ethen moleköle an diesen radikal in der liste "offene_radikale" kleben könnten, und so aus dem system kommen
 offene_radikale = ["R"] * radikale_start_anzahl
-polyporpen_moleküle = []
+polyporpen_molekuele = []
 
 #warschienlichkeit, dass ein radikal mit einem ethenmolekül reagiert
 ethen_reaktions_warscheinlichkeit = 1
@@ -33,7 +34,7 @@ radikal_reaktions_warscheinlichkeit = 1
 
 
 def alle_radikale_gleichzeitig():
-    global ethen_anzahl, polyporpen_moleküle, offene_radikale, ethen_reaktions_warscheinlichkeit, radikal_reaktions_warscheinlichkeit
+    global ethen_anzahl, polyporpen_molekuele, offene_radikale, ethen_reaktions_warscheinlichkeit, radikal_reaktions_warscheinlichkeit
     """ 
     in diesem versuch soll jede "generation" jedes offene radikal oder kette um 1 wachsen oder geschlossen werden
     """
@@ -67,7 +68,7 @@ def alle_radikale_gleichzeitig():
                     radikal_partner = r.randint(0, len(offene_radikale)-1)
                 
                 deleted_entrys[radikal_partner] = 1
-                polyporpen_moleküle.append(offene_radikale[i] + offene_radikale[radikal_partner][::-1])
+                polyporpen_molekuele.append(offene_radikale[i] + offene_radikale[radikal_partner][::-1])
         
         i = 0
         while i < len(deleted_entrys):
@@ -79,7 +80,7 @@ def alle_radikale_gleichzeitig():
             i += 1
 
 def einzeln_eins_nach_dem_anderen():
-    global ethen_anzahl, polyporpen_moleküle, offene_radikale, ethen_reaktions_warscheinlichkeit, radikal_reaktions_warscheinlichkeit
+    global ethen_anzahl, polyporpen_molekuele, offene_radikale, ethen_reaktions_warscheinlichkeit, radikal_reaktions_warscheinlichkeit
     """
     hier wird immer ein einzelnes radikal ausgewähtl und es reagiert direkt mit etwa, und dan ein anderes, und so weiter
     es wird nicht jedes radikal jede iteration gezwungen, zu reagieren
@@ -106,7 +107,7 @@ def einzeln_eins_nach_dem_anderen():
             while radikal_partner == i:
                 radikal_partner = r.randint(0, len(offene_radikale)-1)
             
-            polyporpen_moleküle.append(offene_radikale[i] + offene_radikale[radikal_partner][::-1])
+            polyporpen_molekuele.append(offene_radikale[i] + offene_radikale[radikal_partner][::-1])
             if (i > radikal_partner):
                 offene_radikale.pop(i)
                 offene_radikale.pop(radikal_partner)
@@ -118,8 +119,41 @@ def einzeln_eins_nach_dem_anderen():
                 break
 
 
+def elemente_ueberpruefen():
+    global polyporpen_molekuele, ethen_start_anzahl, radikale_start_anzahl, ethen_anzahl
+    """
+    hier wird überprüft, dass keine elemente (c oder r) zu viel existieren oder zuwenige. einfach um zu überprüfen, dass es keine bugs gibt
+    """
+    
+    #die jetziege anzahl an ethenmolekühlen, die noch da sind
+    kohlenstoff_atome =  2 * ethen_anzahl
+    radikal_reste = 0
+    
+    for polypropen in polyporpen_molekuele:
+        for atom in polypropen:
+            if atom == "C":
+                kohlenstoff_atome += 1
+            elif atom == "R":
+                radikal_reste += 1
+            else:
+                print(f"ein atom wurde gefunden, dass nicht r oder c ist: {atom}")
+    
+    
+    if(kohlenstoff_atome != 2 * ethen_start_anzahl):
+        print("a")
+        return False
+    if(radikal_reste != radikale_start_anzahl):
+        print("b")
+        return False
+    
+    return True
+
+
+
+
 einzeln_eins_nach_dem_anderen()
 
-raise("ich muss moch überprüfen, ob es bugs gibt, indem ich gucke, ob am ende von den originalen radikalen, also die \"R\" buchstaben, und de ethene, (die jeweils als \"CC\" representiert sein sollten) welche enstanden oder zerstort dorden sind, was ja eingentlich nicht passieren kann")
+print(elemente_ueberpruefen())
+
 
 
