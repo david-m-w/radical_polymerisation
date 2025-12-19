@@ -1,5 +1,9 @@
 import random as r
-
+from collections import Counter
+import matplotlib
+print(f"Current backend: {matplotlib.get_backend()}")
+matplotlib.use('TgAgg')
+import matplotlib.pyplot as plt
 
 """
 viel ethen und ein paar radikale.
@@ -18,9 +22,9 @@ darstellungen:
 """
 
 
-ethen_start_anzahl = 10
+ethen_start_anzahl = 10000
 ethen_anzahl = ethen_start_anzahl
-radikale_start_anzahl = 6         #sollte gerade sein, damit am ende kein radikalübrig bleibt, das kein anderen radikal findet. dies sollte kein grösseres problem sein, aber es Könnte konsequenzen haben, wenn dadurche meherere ethen moleköle an diesen radikal in der liste "offene_radikale" kleben könnten, und so aus dem system kommen
+radikale_start_anzahl = 100         #sollte gerade sein, damit am ende kein radikalübrig bleibt, das kein anderen radikal findet. dies sollte kein grösseres problem sein, aber es Könnte konsequenzen haben, wenn dadurche meherere ethen moleköle an diesen radikal in der liste "offene_radikale" kleben könnten, und so aus dem system kommen
 offene_radikale = ["R"] * radikale_start_anzahl
 polyporpen_molekuele = []
 
@@ -119,10 +123,13 @@ def einzeln_eins_nach_dem_anderen():
                 break
 
 
-def elemente_ueberpruefen():
+def passen_alle_elemente():
     global polyporpen_molekuele, ethen_start_anzahl, radikale_start_anzahl, ethen_anzahl
     """
     hier wird überprüft, dass keine elemente (c oder r) zu viel existieren oder zuwenige. einfach um zu überprüfen, dass es keine bugs gibt
+    
+    true = keine fehler
+    false = feheler
     """
     
     #die jetziege anzahl an ethenmolekühlen, die noch da sind
@@ -149,11 +156,29 @@ def elemente_ueberpruefen():
     return True
 
 
+def laengen_analisyeren():
+    global polyporpen_molekuele, ethen_start_anzahl, radikale_start_anzahl
+    """
+    hier werden die längen gezählt und ananlisiert, uns visuell dargestellt
+    """
+    
+    laengen = map(len, polyporpen_molekuele)
+    laengen_counts = dict(Counter(laengen))
+    laengen_counts_keys = list(laengen_counts.keys())
+    laengen_counts_values = [laengen_counts[key] for key in laengen_counts_keys]
+    
+    print(laengen_counts_keys)
+    print(laengen_counts_values)
+    
+    plt.plot(laengen_counts_keys, laengen_counts_values)
+    plt.show()
 
 
 einzeln_eins_nach_dem_anderen()
 
-print(elemente_ueberpruefen())
+if not passen_alle_elemente():
+    raise Exception
 
+laengen_analisyeren()
 
-
+raise "wenn die diagramme nicht klar genug sind, könnte man die simualation ofters machen und den durschschnitt nehmen"
