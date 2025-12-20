@@ -1,8 +1,8 @@
 import random as r
 from collections import Counter
 import matplotlib
-print(f"Current backend: {matplotlib.get_backend()}")
-matplotlib.use('TgAgg')
+#print(f"Current backend: {matplotlib.get_backend()}")
+matplotlib.use('QtAgg')
 import matplotlib.pyplot as plt
 
 """
@@ -22,9 +22,9 @@ darstellungen:
 """
 
 
-ethen_start_anzahl = 10000
+ethen_start_anzahl = 10000000
 ethen_anzahl = ethen_start_anzahl
-radikale_start_anzahl = 100         #sollte gerade sein, damit am ende kein radikalübrig bleibt, das kein anderen radikal findet. dies sollte kein grösseres problem sein, aber es Könnte konsequenzen haben, wenn dadurche meherere ethen moleköle an diesen radikal in der liste "offene_radikale" kleben könnten, und so aus dem system kommen
+radikale_start_anzahl = 10000         #sollte gerade sein, damit am ende kein radikalübrig bleibt, das kein anderen radikal findet. dies sollte kein grösseres problem sein, aber es Könnte konsequenzen haben, wenn dadurche meherere ethen moleköle an diesen radikal in der liste "offene_radikale" kleben könnten, und so aus dem system kommen
 offene_radikale = ["R"] * radikale_start_anzahl
 polyporpen_molekuele = []
 
