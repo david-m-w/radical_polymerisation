@@ -26,19 +26,22 @@ darstellungen:
 
 
 class settings:
-    seed = r.randint(0, 2**32)
-    r.seed(seed)
+    def __init__(self, ethen_start_anzahl, radikale_start_anzahl, bins):
+        self.seed = r.randint(0, 2**32)
+        r.seed(self.seed)
 
-    ethen_start_anzahl = 1000000
-    ethen_anzahl = ethen_start_anzahl
-    radikale_start_anzahl = 1000         #sollte gerade sein, damit am ende kein radikalübrig bleibt, das kein anderen radikal findet. dies sollte kein grösseres problem sein, aber es Könnte konsequenzen haben, wenn dadurche meherere ethen moleköle an diesen radikal in der liste "offene_radikale" kleben könnten, und so aus dem system kommen
-    offene_radikale = ["R"] * radikale_start_anzahl
-    polyporpen_molekuele = []
+        self.bins = bins
 
-    #warschienlichkeit, dass ein radikal mit einem ethenmolekül reagiert
-    ethen_reaktions_warscheinlichkeit = 1
-    #warschienlichkeit, dass ein radikal mit einem anderen radikal reagiert
-    radikal_reaktions_warscheinlichkeit = 1
+        self.ethen_start_anzahl = ethen_start_anzahl
+        self.ethen_anzahl = self.ethen_start_anzahl
+        self.radikale_start_anzahl = radikale_start_anzahl         #sollte gerade sein, damit am ende kein radikalübrig bleibt, das kein anderen radikal findet. dies sollte kein grösseres problem sein, aber es Könnte konsequenzen haben, wenn dadurche meherere ethen moleköle an diesen radikal in der liste "offene_radikale" kleben könnten, und so aus dem system kommen
+        self.offene_radikale = ["R"] * self.radikale_start_anzahl
+        self.polyporpen_molekuele = []
+
+        #warschienlichkeit, dass ein radikal mit einem ethenmolekül reagiert
+        self.ethen_reaktions_warscheinlichkeit = 1
+        #warschienlichkeit, dass ein radikal mit einem anderen radikal reagiert
+        self.radikal_reaktions_warscheinlichkeit = 1
 
 
 
@@ -159,7 +162,8 @@ def passen_alle_elemente(sett):
     return True
 
 
-def laengen_analisyeren(sett, display_results, save_results, return_results, subfolder):
+
+def laengen_analisyeren(sett, print_results):
     """
     hier werden die längen gezählt und ananlisiert, uns visuell dargestellt
     """
@@ -169,23 +173,37 @@ def laengen_analisyeren(sett, display_results, save_results, return_results, sub
     laengen_counts_keys = list(laengen_counts.keys())
     laengen_counts_values = [laengen_counts[key] for key in laengen_counts_keys]
     
-    print(laengen_counts_keys)
-    print(laengen_counts_values)
+    if print_results:
+        print(laengen_counts_keys)
+        print(laengen_counts_values)
     
-    #saw this lien somwhere, but it dosent seem necesssary
+    return (laengen_counts_keys, laengen_counts_values)
+    
+def render_results(sett, keys, values, display_results, save_results, return_results, subfolder, is_multi = False):
+    #set window size:
     fig = plt.figure(figsize=(20, 12))
+    #set how many plots i want
     gs = gridspec.GridSpec(2, 1)
     
     ax_scatter = plt.subplot(gs[1:2, :2])
-    ax_scatter.scatter(laengen_counts_keys, laengen_counts_values)
+    ax_scatter.scatter(keys, values)
     ax_scatter.set(
         xlabel="länge der kette",
         ylabel="häufigkeit der länge",
-        title = f"es it noch {sett.ethen_anzahl} übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%\nseed: {sett.seed}\nethen start anzahl: {sett.ethen_start_anzahl}\nradikale start anzahl: {sett.radikale_start_anzahl}"
     )
 
+    if not is_multi:
+        ax_scatter.set(
+            title = f"es it noch {sett.ethen_anzahl} übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%\nseed: {sett.seed}\nethen start anzahl: {sett.ethen_start_anzahl}\nradikale start anzahl: {sett.radikale_start_anzahl}"
+        )
+    else:
+        ax_scatter.set(
+            title = f"es it noch insgesammt {sett.ethen_anzahl} übrig, also {sett.ethen_anzahl/(sett.ethen_start_anzahl * sett.instances_amount) * 100}%\ninstance amount: {sett.instances_amount}\nethen start anzahl pro instance: {sett.ethen_start_anzahl}\nradikale start anzahl pro instance: {sett.radikale_start_anzahl}"
+        )
+    
+
     ax_hist = plt.subplot(gs[0, :2],sharex=ax_scatter)
-    ax_hist.hist(laengen_counts_keys, bins = 100)
+    ax_hist.hist(keys, bins = sett.bins)
     ax_hist.set(
         xlabel="länge der kette",
         ylabel="häufigkeit der länge"#,
@@ -197,17 +215,20 @@ def laengen_analisyeren(sett, display_results, save_results, return_results, sub
     if save_results:
         if not os.path.isdir(f"plot_saves/{subfolder}"):
             os.makedirs(f"plot_saves/{subfolder}")
-        plt.savefig(f"plot_saves/{subfolder}/image_{sett.seed}_{sett.ethen_start_anzahl}_{sett.radikale_start_anzahl}.svg", format="svg")
+        if not is_multi:
+            plt.savefig(f"plot_saves/{subfolder}/image_{sett.seed}_{sett.ethen_start_anzahl}_{sett.radikale_start_anzahl}.svg", format="svg")
+        else:
+            plt.savefig(f"plot_saves/{subfolder}/image_{sett.ethen_start_anzahl}_{sett.radikale_start_anzahl}.svg", format="svg")
     if display_results:
         plt.show()
     if return_results:
-        return (laengen_counts_keys, laengen_counts_values)
+        return (keys, values)
     else:
         return None
 
 
-def main(alle_zusammen, einzeln, display_results, save_results, return_results, subfolder):    
-    sett = settings()
+def main(alle_zusammen, einzeln, display_results, save_results, return_results, subfolder, ethen_start_anzahl, radikale_start_anzahl, bins):    
+    sett = settings(ethen_start_anzahl, radikale_start_anzahl, bins)
     
     if alle_zusammen:
         alle_radikale_gleichzeitig(sett)
@@ -218,12 +239,14 @@ def main(alle_zusammen, einzeln, display_results, save_results, return_results, 
         print(f"error on seed: {sett.seed}")
         raise Exception
     
-    res = laengen_analisyeren(sett, display_results, save_results, return_results, subfolder)
+    laengen_counts_keys, laengen_counts_values = laengen_analisyeren(sett, False)
+    
+    res = render_results(sett, laengen_counts_keys, laengen_counts_values, display_results, save_results, return_results, subfolder)
     
     if return_results:
-        return res
+        return res, sett.ethen_anzahl
 
 if __name__ == "__main__":
-    main(True, False, True, True, False, f"single_{int(t.time())}")
+    main(True, False, True, True, False, f"single_{int(t.time())}", 1000000, 1000, 100)
 #else:
-    #main(True, False, False, True, True, f"multi_{t.time()}")
+    #main(True, False, False, True, True, f"multi_{int(t.time())}")
