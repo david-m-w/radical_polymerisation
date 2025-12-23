@@ -14,10 +14,10 @@ class settings_setup:
     
     def ethen_anzahl_eintragen(self, ethen_anzahl):
         self.ethen_anzahl = ethen_anzahl
-    
+
 def main(number_of_simulations):
     with Pool(number_of_simulations) as p:
-        sett = settings_setup(10000000, 1000, 100, number_of_simulations)
+        sett = settings_setup(1000000, 1000, 100, number_of_simulations)
         subfolder = f"multi_{int(t.time())}"
         data_for_the_processes = [(False, True, False, True, True, subfolder, sett.ethen_start_anzahl, sett.radikale_start_anzahl, sett.bins)] * number_of_simulations
         
@@ -39,4 +39,4 @@ def main(number_of_simulations):
 
 
 if __name__ == "__main__":
-    main(70)
+    main(30)
