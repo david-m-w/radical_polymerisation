@@ -17,7 +17,7 @@ class settings_setup:
 
 def main(number_of_simulations):
     with Pool(number_of_simulations) as p:
-        sett = settings_setup(1000000, 1000, 100, number_of_simulations)
+        sett = settings_setup(10000000, 1000, 100, number_of_simulations)
         subfolder = f"multi_{int(t.time())}"
         data_for_the_processes = [(False, True, False, True, True, subfolder, sett.ethen_start_anzahl, sett.radikale_start_anzahl, sett.bins)] * number_of_simulations
         
