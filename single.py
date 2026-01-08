@@ -247,6 +247,6 @@ def main(alle_zusammen, einzeln, display_results, save_results, return_results, 
         return res, sett.ethen_anzahl
 
 if __name__ == "__main__":
-    main(True, False, True, True, False, f"single_{int(t.time())}", 1000000, 1000, 100)
+    main(True, False, True, True, True, f"single_{int(t.time())}", 100000, 1000, 100)
 #else:
     #main(True, False, False, True, True, f"multi_{int(t.time())}")
