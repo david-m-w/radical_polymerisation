@@ -165,7 +165,7 @@ def passen_alle_elemente(sett):
 
 def laengen_analisyeren(sett, print_results):
     """
-    hier werden die längen gezählt und ananlisiert, uns visuell dargestellt
+    hier werden die längen gezählt und ananlisiert 
     """
     
     laengen = map(len, sett.polyporpen_molekuele)
@@ -178,8 +178,21 @@ def laengen_analisyeren(sett, print_results):
         print(laengen_counts_values)
     
     return (laengen_counts_keys, laengen_counts_values)
+
+def durchschnitt_und_median_berechnen(keys, values):
+    values_with_repetitions = []
+    for i in range(len(keys)):
+        for _ in range(keys[i]):
+            values_with_repetitions.append(values[i])
     
-def render_results(sett, keys, values, display_results, save_results, return_results, subfolder, is_multi = False):
+    values_with_repetitions.sort()
+    
+    average = sum(values_with_repetitions) / len(values_with_repetitions)
+    median = values_with_repetitions[int(len(values_with_repetitions) / 2)]
+
+    return average, median
+
+def render_results(sett, keys, values, display_results, save_results, return_results, subfolder, is_multi = False, alle_zusammen, einzeln):
     #set window size:
     fig = plt.figure(figsize=(20, 12))
     #set how many plots i want
@@ -192,13 +205,26 @@ def render_results(sett, keys, values, display_results, save_results, return_res
         ylabel="häufigkeit der länge",
     )
 
+    durchsnchnitt, median = durchschnitt_und_median_berechnen(keys, values)
+
     if not is_multi:
         ax_scatter.set(
-            title = f"es it noch {sett.ethen_anzahl} übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%\nseed: {sett.seed}\nethen start anzahl: {sett.ethen_start_anzahl}\nradikale start anzahl: {sett.radikale_start_anzahl}"
+            title = f"""es it noch {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%
+            seed: {sett.seed}
+            ethen start anzahl: {sett.ethen_start_anzahl}
+            radikale start anzahl: {sett.radikale_start_anzahl}
+            alle zusammen: {alle_zusammen}, einzeln: {einzeln}
+            durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
         )
     else:
         ax_scatter.set(
-            title = f"es it noch insgesammt {sett.ethen_anzahl} übrig, also {sett.ethen_anzahl/(sett.ethen_start_anzahl * sett.instances_amount) * 100}%\ninstance amount: {sett.instances_amount}\nethen start anzahl pro instance: {sett.ethen_start_anzahl}\nradikale start anzahl pro instance: {sett.radikale_start_anzahl}"
+            title = f"""es it noch insgesammt {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/(sett.ethen_start_anzahl * sett.instances_amount) * 100}%
+            simulationen: {sett.instances_amount}
+            ethen start anzahl pro simulation: {sett.ethen_start_anzahl}
+            radikale start anzahl pro simularion: {sett.radikale_start_anzahl}
+            alle zusammen: {alle_zusammen}, einzeln: {einzeln}
+            durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
+
         )
     
 
@@ -241,7 +267,7 @@ def main(alle_zusammen, einzeln, display_results, save_results, return_results, 
     
     laengen_counts_keys, laengen_counts_values = laengen_analisyeren(sett, False)
     
-    res = render_results(sett, laengen_counts_keys, laengen_counts_values, display_results, save_results, return_results, subfolder)
+    res = render_results(sett, laengen_counts_keys, laengen_counts_values, display_results, save_results, return_results, subfolder, alle_zusammen, einzeln)
     
     if return_results:
         return res, sett.ethen_anzahl
