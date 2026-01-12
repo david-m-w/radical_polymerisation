@@ -192,7 +192,7 @@ def durchschnitt_und_median_berechnen(keys, values):
 
     return average, median
 
-def render_results(sett, keys, values, display_results, save_results, return_results, subfolder, is_multi = False, alle_zusammen, einzeln):
+def render_results(sett, keys, values, display_results, save_results, return_results, subfolder, is_multi, alle_zusammen, einzeln):
     #set window size:
     fig = plt.figure(figsize=(20, 12))
     #set how many plots i want
@@ -204,21 +204,25 @@ def render_results(sett, keys, values, display_results, save_results, return_res
         xlabel="länge der kette",
         ylabel="häufigkeit der länge",
     )
-    ax_scatter.xaxis.set_major_locator(MaxNLocator(nbins=10))
+    ax_scatter.xaxis.set_major_locator(plt.MaxNLocator(nbins=14))
 
     durchsnchnitt, median = durchschnitt_und_median_berechnen(keys, values)
 
     if not is_multi:
         ax_scatter.set(
-            title = f"""es it noch {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%, seed: {sett.seed}
+            title = f"""es it noch {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%,
+            seed: {sett.seed}
             ethen start anzahl: {sett.ethen_start_anzahl}, radikale start anzahl: {sett.radikale_start_anzahl}
-            alle zusammen: {alle_zusammen}, einzeln: {einzeln}, durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
+            alle zusammen: {alle_zusammen}, einzeln: {einzeln},
+            durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
         )
     else:
         ax_scatter.set(
-            title = f"""es it noch insgesammt {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/(sett.ethen_start_anzahl * sett.instances_amount) * 100}%, simulationen: {sett.instances_amount}
+            title = f"""es it noch insgesammt {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/(sett.ethen_start_anzahl * sett.instances_amount) * 100}%,
+            simulationen: {sett.instances_amount}
             ethen start anzahl pro simulation: {sett.ethen_start_anzahl}, radikale start anzahl pro simularion: {sett.radikale_start_anzahl}
-            alle zusammen: {alle_zusammen}, einzeln: {einzeln}, durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
+            alle zusammen: {alle_zusammen}, einzeln: {einzeln},
+            durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
 
         )
     
@@ -230,7 +234,7 @@ def render_results(sett, keys, values, display_results, save_results, return_res
         ylabel="häufigkeit der länge"#,
         #title = f"es it noch {ethen_anzahl} übrig, also {ethen_anzahl/ethen_start_anzahl * 100}%\nseed: {seed}"
     )
-    ax_scatter.xaxis.set_major_locator(MaxNLocator(nbins=10))
+    ax_scatter.xaxis.set_major_locator(plt.MaxNLocator(nbins=14))
 
 
     plt.tight_layout()
@@ -264,12 +268,12 @@ def main(alle_zusammen, einzeln, display_results, save_results, return_results, 
     
     laengen_counts_keys, laengen_counts_values = laengen_analisyeren(sett, False)
     
-    res = render_results(sett, laengen_counts_keys, laengen_counts_values, display_results, save_results, return_results, subfolder, alle_zusammen, einzeln)
+    res = render_results(sett, laengen_counts_keys, laengen_counts_values, display_results, save_results, return_results, subfolder, False, alle_zusammen, einzeln)
     
     if return_results:
         return res, sett.ethen_anzahl
 
 if __name__ == "__main__":
-    main(True, False, True, True, True, f"single_{int(t.time())}", 100000, 1000, 100)
+    main(False, True, True, True, True, f"single_{int(t.time())}", 100000, 1000, 100)
 #else:
     #main(True, False, False, True, True, f"multi_{int(t.time())}")

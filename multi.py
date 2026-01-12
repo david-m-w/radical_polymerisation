@@ -19,7 +19,9 @@ def main(number_of_simulations):
     with Pool(number_of_simulations) as p:
         sett = settings_setup(10000000, 1000, 100, number_of_simulations)
         subfolder = f"multi_{int(t.time())}"
-        data_for_the_processes = [(False, True, False, True, True, subfolder, sett.ethen_start_anzahl, sett.radikale_start_anzahl, sett.bins)] * number_of_simulations
+        alle_zusammen = False
+        einzeln = True
+        data_for_the_processes = [(alle_zusammen, einzeln, False, True, True, subfolder, sett.ethen_start_anzahl, sett.radikale_start_anzahl, sett.bins)] * number_of_simulations
         
         results_mit_ethen = p.starmap(single.main, data_for_the_processes)
         
@@ -34,7 +36,7 @@ def main(number_of_simulations):
         
         sett.ethen_anzahl_eintragen(ethen_uebrig_gesamt)
         
-        single.render_results(sett, results_keys_concatenated, results_values_concatenated, True, True, False, f"{subfolder}/all_added", True)
+        single.render_results(sett, results_keys_concatenated, results_values_concatenated, True, True, False, f"{subfolder}/all_added", True, alle_zusammen, einzeln)
 
 
 
