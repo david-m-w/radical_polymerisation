@@ -204,26 +204,21 @@ def render_results(sett, keys, values, display_results, save_results, return_res
         xlabel="länge der kette",
         ylabel="häufigkeit der länge",
     )
+    ax_scatter.xaxis.set_major_locator(MaxNLocator(nbins=10))
 
     durchsnchnitt, median = durchschnitt_und_median_berechnen(keys, values)
 
     if not is_multi:
         ax_scatter.set(
-            title = f"""es it noch {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%
-            seed: {sett.seed}
-            ethen start anzahl: {sett.ethen_start_anzahl}
-            radikale start anzahl: {sett.radikale_start_anzahl}
-            alle zusammen: {alle_zusammen}, einzeln: {einzeln}
-            durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
+            title = f"""es it noch {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/sett.ethen_start_anzahl * 100}%, seed: {sett.seed}
+            ethen start anzahl: {sett.ethen_start_anzahl}, radikale start anzahl: {sett.radikale_start_anzahl}
+            alle zusammen: {alle_zusammen}, einzeln: {einzeln}, durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
         )
     else:
         ax_scatter.set(
-            title = f"""es it noch insgesammt {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/(sett.ethen_start_anzahl * sett.instances_amount) * 100}%
-            simulationen: {sett.instances_amount}
-            ethen start anzahl pro simulation: {sett.ethen_start_anzahl}
-            radikale start anzahl pro simularion: {sett.radikale_start_anzahl}
-            alle zusammen: {alle_zusammen}, einzeln: {einzeln}
-            durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
+            title = f"""es it noch insgesammt {sett.ethen_anzahl} ethen übrig, also {sett.ethen_anzahl/(sett.ethen_start_anzahl * sett.instances_amount) * 100}%, simulationen: {sett.instances_amount}
+            ethen start anzahl pro simulation: {sett.ethen_start_anzahl}, radikale start anzahl pro simularion: {sett.radikale_start_anzahl}
+            alle zusammen: {alle_zusammen}, einzeln: {einzeln}, durchscnitt länge: {durchsnchnitt}, median länge: {median}"""
 
         )
     
@@ -235,7 +230,9 @@ def render_results(sett, keys, values, display_results, save_results, return_res
         ylabel="häufigkeit der länge"#,
         #title = f"es it noch {ethen_anzahl} übrig, also {ethen_anzahl/ethen_start_anzahl * 100}%\nseed: {seed}"
     )
-    
+    ax_scatter.xaxis.set_major_locator(MaxNLocator(nbins=10))
+
+
     plt.tight_layout()
     
     if save_results:
