@@ -165,7 +165,8 @@ def passen_alle_elemente(sett):
 
 def laengen_analisyeren(sett, print_results):
     """
-    hier werden die längen gezählt und ananlisiert 
+    hier werden die längen gezählt und ananlisiert
+    keys are the lengths, values are the amoutns
     """
     
     laengen = map(len, sett.polyporpen_molekuele)
@@ -180,15 +181,15 @@ def laengen_analisyeren(sett, print_results):
     return (laengen_counts_keys, laengen_counts_values)
 
 def durchschnitt_und_median_berechnen(keys, values):
-    values_with_repetitions = []
-    for i in range(len(keys)):
-        for _ in range(keys[i]):
-            values_with_repetitions.append(values[i])
+    keys_with_repetition = []
+    for i in range(len(values)):
+        for _ in range(values[i]):
+            keys_with_repetition.append(keys[i])
     
-    values_with_repetitions.sort()
+    keys_with_repetition.sort()
     
-    average = sum(values_with_repetitions) / len(values_with_repetitions)
-    median = values_with_repetitions[int(len(values_with_repetitions) / 2)]
+    average = sum(keys_with_repetition) / len(keys_with_repetition)
+    median = keys_with_repetition[int(len(keys_with_repetition) / 2)]
 
     return average, median
 
